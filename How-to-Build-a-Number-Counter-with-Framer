@@ -1,0 +1,50 @@
+import { useEffect, useState } from "react"
+import { addPropertyControls, ControlType, motion, animate } from "framer"
+import Counterup from "./Counterup.tsx"
+
+export default function CountUp({ start, end, duration, fontSize, color }) {
+    const [displayCount, setDisplayCount] = useState(start)
+
+    useEffect(() => {
+        const controls = animate(start, end, {
+            duration,
+            onUpdate: (latest) => {
+                setDisplayCount(Math.floor(latest))
+            },
+        })
+        return () => controls.stop()
+    }, [start, end, duration])
+
+    return (
+        <motion.div style={{ fontSize, color, fontWeight: "bold" }}>
+            {displayCount}
+        </motion.div>
+    )
+}
+
+// 👇 Make it customizable in the Framer visual editor
+addPropertyControls(CountUp, {
+    start: {
+        type: ControlType.Number,
+        defaultValue: 0,
+        min: 0,
+        title: "Start",
+    },
+    end: { type: ControlType.Number, defaultValue: 100, min: 0, title: "End" },
+    duration: {
+        type: ControlType.Number,
+        defaultValue: 2,
+        min: 0.5,
+        title: "Duration (s)",
+    },
+    fontSize: {
+        type: ControlType.Number,
+        defaultValue: 48,
+        title: "Font Size",
+    },
+    color: {
+        type: ControlType.Color,
+        defaultValue: "#000000",
+        title: "Text Color",
+    },
+})
