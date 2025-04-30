@@ -2,7 +2,16 @@ import { useEffect, useState } from "react"
 import { addPropertyControls, ControlType, motion, animate } from "framer"
 import Counterup from "./Counterup.tsx"
 
-export default function CountUp({ start, end, duration, fontSize, color }) {
+export default function CountUp({
+    start,
+    end,
+    duration,
+    fontSize,
+    color,
+    fontFamily,
+    showPercentage,
+    formatWithCommas,
+}) {
     const [displayCount, setDisplayCount] = useState(start)
 
     useEffect(() => {
@@ -15,9 +24,17 @@ export default function CountUp({ start, end, duration, fontSize, color }) {
         return () => controls.stop()
     }, [start, end, duration])
 
+    // Format number with commas if enabled
+    const formatNumber = (num) => {
+        const formatted = formatWithCommas
+            ? new Intl.NumberFormat().format(num)
+            : num
+        return showPercentage ? `${formatted}%` : formatted
+    }
+
     return (
-        <motion.div style={{ fontSize, color, fontWeight: "bold" }}>
-            {displayCount}
+        <motion.div style={{ fontSize, color, fontFamily, fontWeight: "bold" }}>
+            {formatNumber(displayCount)}
         </motion.div>
     )
 }
@@ -30,7 +47,12 @@ addPropertyControls(CountUp, {
         min: 0,
         title: "Start",
     },
-    end: { type: ControlType.Number, defaultValue: 100, min: 0, title: "End" },
+    end: {
+        type: ControlType.Number,
+        defaultValue: 100,
+        min: 0,
+        title: "End",
+    },
     duration: {
         type: ControlType.Number,
         defaultValue: 2,
@@ -46,5 +68,20 @@ addPropertyControls(CountUp, {
         type: ControlType.Color,
         defaultValue: "#000000",
         title: "Text Color",
+    },
+    fontFamily: {
+        type: ControlType.String,
+        defaultValue: "Arial, sans-serif",
+        title: "Font Family",
+    },
+    showPercentage: {
+        type: ControlType.Boolean,
+        defaultValue: false,
+        title: "Show %",
+    },
+    formatWithCommas: {
+        type: ControlType.Boolean,
+        defaultValue: true,
+        title: "Add Commas",
     },
 })
