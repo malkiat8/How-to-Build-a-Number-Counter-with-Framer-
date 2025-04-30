@@ -2,16 +2,7 @@ import { useEffect, useState } from "react"
 import { addPropertyControls, ControlType, motion, animate } from "framer"
 import Counterup from "./Counterup.tsx"
 
-export default function CountUp({
-    start,
-    end,
-    duration,
-    fontSize,
-    color,
-    fontFamily,
-    showPercentage,
-    formatWithCommas,
-}) {
+export default function CountUp({ start, end, duration, fontSize, color, fontFamily }) {
     const [displayCount, setDisplayCount] = useState(start)
 
     useEffect(() => {
@@ -24,17 +15,9 @@ export default function CountUp({
         return () => controls.stop()
     }, [start, end, duration])
 
-    // Format number with commas if enabled
-    const formatNumber = (num) => {
-        const formatted = formatWithCommas
-            ? new Intl.NumberFormat().format(num)
-            : num
-        return showPercentage ? `${formatted}%` : formatted
-    }
-
     return (
         <motion.div style={{ fontSize, color, fontFamily, fontWeight: "bold" }}>
-            {formatNumber(displayCount)}
+            {displayCount}
         </motion.div>
     )
 }
@@ -73,15 +56,5 @@ addPropertyControls(CountUp, {
         type: ControlType.String,
         defaultValue: "Arial, sans-serif",
         title: "Font Family",
-    },
-    showPercentage: {
-        type: ControlType.Boolean,
-        defaultValue: false,
-        title: "Show %",
-    },
-    formatWithCommas: {
-        type: ControlType.Boolean,
-        defaultValue: true,
-        title: "Add Commas",
     },
 })
